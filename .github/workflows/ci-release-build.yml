@@ -2,28 +2,11 @@ name: Release Build
 
 on:
   push:
-    tags:
-      - 'v*'
+    # tags:
+    #   - 'v*'
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-    steps:
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-  build-and-upload:
-    needs: create-release
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -37,7 +20,7 @@ jobs:
           - goos: darwin
             ext: ''
     steps:
-      - name: Check out code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
       - name: Set up Go
@@ -49,12 +32,22 @@ jobs:
         run: |
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o strftime-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
 
-      - name: Upload Artifact
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: ls
+        run: |
+          ls -al
+
+      - name: Upload Binary To Cache
+        uses: actions/cache@v3
         with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./strftime-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
-          asset_name: strftime-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
-          asset_content_type: application/octet-stream
+          path: strftime-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
+          key: ${{ matrix.goos}}
+
+      # - name: Upload Artifact
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ needs.create-release.outputs.upload_url }}
+      #     asset_path: ./strftime-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
+      #     asset_name: strftime-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
+      #     asset_content_type: application/octet-stream
