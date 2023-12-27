@@ -50,5 +50,5 @@ brews:
     license: 'MIT'
 
     repository:
-      name: strftime-tap
+      name: homebrew-strftime-tap
       owner: zchryr
