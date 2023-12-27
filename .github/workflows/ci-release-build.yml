@@ -52,15 +52,10 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4.1.0
 
-      - name: ls & tree
-        run: |
-          ls -al
-          tree .
-
-      # - name: Create Release
-      #   uses: ncipollo/release-action@v1
-      #   with:
-      #     artifacts: 'strftime-*'
-      #     generateReleaseNotes: true
-      #     makeLatest: true
-      #     name: '${{ github.ref_name }}'
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: 'strftime-*/*'
+          generateReleaseNotes: true
+          makeLatest: true
+          name: '${{ github.ref_name }}'
