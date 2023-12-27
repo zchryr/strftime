@@ -54,7 +54,7 @@ jobs:
         uses: actions/download-artifact@v4.1.0
 
       - name: Create Release
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1.13.0
         with:
           artifacts: 'strftime-*/*'
           generateReleaseNotes: true
