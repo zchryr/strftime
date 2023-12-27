@@ -1,4 +1,4 @@
-name: Release Build
+name: Tags test
 
 on:
   push:
@@ -14,3 +14,6 @@ jobs:
       - name: echo
         run: |
           echo ${{ github.ref }}
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
