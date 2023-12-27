@@ -43,6 +43,7 @@ jobs:
           path: strftime-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
 
   release-and-upload:
+    name: Release & Upload Artifacts
     runs-on: ubuntu-latest
     needs: build
     permissions:
