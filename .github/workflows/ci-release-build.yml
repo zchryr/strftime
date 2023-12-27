@@ -2,8 +2,8 @@ name: Release Build
 
 on:
   push:
-    # tags:
-    #   - 'v*'
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -22,10 +22,10 @@ jobs:
             ext: ''
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5.0.0
         with:
           go-version: '1.x'
 
@@ -48,18 +48,12 @@ jobs:
 
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.0
 
-      - name: ls
-        run: |
-          ls -al
-
-      # - name: Upload Artifact
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ needs.create-release.outputs.upload_url }}
-      #     asset_path: ./strftime-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
-      #     asset_name: strftime-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}
-      #     asset_content_type: application/octet-stream
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: 'strftime-*'
+          generateReleaseNotes: true
+          makeLatest: true
+          name: '${{ github.ref_name }}'
